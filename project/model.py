@@ -28,10 +28,13 @@ def get_user(user_id):
     try:
         response = requests.get(request)
         logger.logger_rest("Get User Name - Scanner", response, response.url)
-    except ConnectionError:
+    except ConnectionError as e:
         logger.logger_error(user_id, user_id)
-    except Exception:
-        print("fail")
+    except TypeError as e: # This happens when the app cannot reach the server.
+        logger.logger_error(user_id, user_id)
+    except Exception as e:
+        logger.logger_error(user_id, user_id)
+
 
 
     if response is None:

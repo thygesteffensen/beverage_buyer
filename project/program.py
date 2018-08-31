@@ -9,8 +9,8 @@ class Application(Frame):
     def __init__(self, master):
         ''' Creating Frames and placing widgets '''
         # Full screen window
-        master.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-        # master.geometry('400x300')
+        # master.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+        master.geometry('480x320')
         # Window title
         master.title('KK24 - Beverage buyer')
 
@@ -20,7 +20,7 @@ class Application(Frame):
         entry_font_size = 10
         entry_font = tkFont.Font(family=default_font, size=entry_font_size)
 
-        info_font_size = 12
+        info_font_size = 14
         info_font = tkFont.Font(family=default_font, size=info_font_size, weight="bold")
 
         warning_font_size = 16
@@ -74,8 +74,14 @@ class Application(Frame):
             root.user_name = model.get_user(user_id=root.user_id)
 
             # Printing user to GUI
-            self.label_info.config(text="User: " + root.user_name)
-            self.label_warning.config(text='')
+            if (root.user_name):
+                self.label_info.config(text="User: " + root.user_name)
+                self.label_warning.config(text='')
+            else:
+                self.label_warning.config(
+                    text="There is no connection to the server.\nContact an administrator."
+                         "\nThis incident will be reported.", fg='red')
+                root.user_id = 0
         else:
             # Assign beverage ID to var
             root.beverage_id = self.barcode.get()
@@ -91,9 +97,10 @@ class Application(Frame):
             status = model.call_buy_beverage(user_id=root.user_id, beverage_id=root.beverage_id)
 
             if status == 400:
-                self.label_warning.config(text="Purchase was unsuccessful \nPlease contact an administrator", fg='red')
+                self.label_warning.config(text="Purchase was unsuccessful. \nPlease contact an administrator.",
+                                          fg='red')
             else:
-                self.label_warning.config(text="Purchase was successful", fg='green')
+                self.label_warning.config(text="Purchase was successful!", fg='green')
 
             # Resetting ID's to 0
             root.user_id = 0
